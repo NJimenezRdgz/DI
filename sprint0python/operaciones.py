@@ -1,21 +1,14 @@
+def suma(a,b):
+    return a + b
+def resta(a,b):
+    return a-b
+def multiplicacion(a,b):
+   return a * b
 
 
-print("Dame 2 valores")
-a = int(input("Valor a: "))
-b = int(input("Valor b: "))
-operacion = input("Selecciona una accion a realizar(suma, resta, multiplicacion, division): ")
-
-if operacion == 'suma':
-
-    print(a+b)
-elif operacion == 'resta':
-    print(a-b)
-elif operacion == 'multiplicacion':
-    print(a*b)
-elif operacion == 'division':
+def division(a,b):
     if b == 0:
-        print("No se puede dividir entre 0")
+        return print("No se puede dividir entre 0")
+
     else:
-        print(a/b)
-else:
-    print("No has seleccionado una accion valida")
+        return a / b
