@@ -3,7 +3,7 @@ import tkinter as tk
 
 
 root = tk.Tk()
-root.title("")
+root.title("Ejercicio 5")
 root.geometry("600x400")
 
 def mostrar_seleccion():

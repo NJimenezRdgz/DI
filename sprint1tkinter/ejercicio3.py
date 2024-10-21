@@ -6,7 +6,7 @@ def obtener_texto():
     etiqueta_saludo.config(text=f"Saludos, {texto}")
 
 root = tk.Tk()
-root.title("Ejemplo de entry")
+root.title("Ejercicio 3")
 root.geometry("300x200")
 
 entry= tk.Entry(root,width=30)

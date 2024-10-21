@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 root = tk.Tk()
-root.title("Mi ventana")
+root.title("Ejercicio 1")
 root.geometry("300x200")
 etiqueta1 = tk.Label(root, text= "Bienvenid@!")
 etiqueta1.pack()

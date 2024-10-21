@@ -2,7 +2,7 @@ import tkinter as tk
 
 
 root = tk.Tk()
-root.title("Mi ventana")
+root.title("Ejercicio 2")
 root.geometry("300x200")
 def mostrar_mensaje():
     etiqueta1 = tk.Label(root, text="Bienvenid@!")

@@ -10,7 +10,7 @@ def borrar_texto():
     etiqueta_texto.config(text = "")
 
 root = tk.Tk()
-root.title("Ejemplo de Frame")
+root.title("Ejercicio 8")
 root.geometry("600x400")
 
 

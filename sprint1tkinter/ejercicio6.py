@@ -10,7 +10,7 @@ def mostrar_selecciones():
     etiqueta.config(text = f"Seleccionaste: {', '.join(elementos)}")
 
 root = tk.Tk()
-root.title("Ejemplo Listbox")
+root.title("Ejercicio 6")
 root.geometry("300x250")
 
 opciones = ["Manzana", "Banana","Naranja"]

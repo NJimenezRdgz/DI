@@ -15,7 +15,7 @@ def dibujar_formas():
 
 
 root = tk.Tk()
-root.title("Ejemplo Canvas")
+root.title("Ejercicio 7")
 root.geometry("500x400")
 
 canvas = tk.Canvas(root, width=300, height=200, bg="white")
