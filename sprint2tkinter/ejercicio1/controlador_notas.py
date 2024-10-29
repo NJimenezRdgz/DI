@@ -1,49 +1,74 @@
 import threading
-import requests
+import tkinter as tk
 from tkinter import messagebox
+import requests
+from io import BytesIO
+from PIL import Image, ImageTk
+
 
 class ControladorNotas:
     def __init__(self, modelo, vista):
         self.modelo = modelo
         self.vista = vista
-        self.vista.controlador = self
-        self.modelo.cargar_notas()
-        self.vista.actualizar_listbox(self.modelo.obtener_notas())
+
+        self.vista.boton_agregar.config(command=self.agregar_nota)
+        self.vista.boton_eliminar.config(command=self.eliminar_nota)
+        self.vista.boton_guardar.config(command=self.guardar_notas)
+        self.vista.boton_cargar.config(command=self.cargar_notas)
+        self.vista.boton_descargar.config(command=self.iniciar_descarga)
+
+        self.vista.root.bind("<Button-1>", self.actualizar_coordenadas)
 
     def agregar_nota(self):
-        nueva_nota = self.vista.entry_agregar_nota.get()
-        if nueva_nota:
+        nueva_nota = self.vista.entrada.get()
+        self.vista.entrada.delete(0, tk.END)
+        if nueva_nota:  # checks not empty
             self.modelo.agregar_nota(nueva_nota)
-            self.vista.actualizar_listbox(self.modelo.obtener_notas())
-            self.vista.entry_agregar_nota.delete(0, tk.END)
+            self.actualizar_listbox(self.modelo.obtener_notas())
 
     def eliminar_nota(self):
-        seleccion = self.vista.lista_notas.curselection()
+        seleccion = self.vista.lista.curselection()
         if seleccion:
-            indice = seleccion[0]
-            self.modelo.eliminar_nota(indice)
-            self.vista.actualizar_listbox(self.modelo.obtener_notas())
+            self.modelo.eliminar_nota(seleccion[0])
+            self.actualizar_listbox(self.modelo.obtener_notas())
 
     def guardar_notas(self):
         self.modelo.guardar_notas()
-        messagebox.showinfo("Información", "Notas guardadas correctamente")
+        messagebox.showinfo("Aviso", "Se han guardado las notas en el archivo.")
 
     def cargar_notas(self):
         self.modelo.cargar_notas()
-        self.vista.actualizar_listbox(self.modelo.obtener_notas())
+        self.actualizar_listbox(self.modelo.obtener_notas())
+        messagebox.showinfo("Aviso", "Se han cargado las notas desde el archivo.")
 
-    def descargar_imagen(self):
-        def tarea_descarga():
-            url = "https://github.com/"  # Cambia esto por la URL real de la imagen
+    def descargar_imagen(self, url, callback):
+        try:
             respuesta = requests.get(url)
-            if respuesta.status_code == 200:
-                with open("imagen_descargada.jpg", "wb") as archivo:
-                    archivo.write(respuesta.content)
-                self.vista.mostrar_imagen("imagen_descargada.jpg")
-            else:
-                messagebox.showerror("Error", "No se pudo descargar la imagen")
+            respuesta.raise_for_status()
+            imagen = Image.open(BytesIO(respuesta.content))
+            imagen_tk = ImageTk.PhotoImage(imagen)
+            self.vista.root.after(0, callback, imagen_tk)
+        except requests.exceptions.RequestException as e:
+            print(f"Error al descargar la imagen: {e}")
+            self.vista.root.after(0, callback, None)
 
-        threading.Thread(target=tarea_descarga).start()
+    def actualizar_etiqueta(self, imagen_tk):
+        if imagen_tk:
+            self.vista.etiqueta_img.config(image=imagen_tk)
+            self.vista.etiqueta_img.image = imagen_tk
+        else:
+            self.vista.etiqueta_img.config(text="Error al descargar la imagen.")
 
     def actualizar_coordenadas(self, event):
-        self.vista.actualizar_coordenadas_label(event.x, event.y)
+        self.vista.etiqueta_coords.config(text=f"Coordenadas click: x: {event.x} y: {event.y}")
+
+    def iniciar_descarga(self):
+        url = 'https://raw.githubusercontent.com/Marcos-Rama/DI/refs/heads/main/fototkinter.jpg'
+        # uso la imagen de marcos ya que la mia da error por ser de un repositorio privado.
+        hilo = threading.Thread(target=self.descargar_imagen, args=(url, self.actualizar_etiqueta))
+        hilo.start()
+
+    def actualizar_listbox(self, notas):
+        self.vista.lista.delete(0, tk.END)
+        for nota in notas:
+            self.vista.lista.insert(tk.END, nota)

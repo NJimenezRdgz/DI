@@ -1,9 +1,17 @@
+import tkinter as tk
+
+from controlador_notas import ControladorNotas
 from notas_model import NotasModel
 from vista_notas import VistaNotas
-from controlador_notas import ControladorNotas
+
+
+def main():
+    root = tk.Tk()
+    modelo = NotasModel()
+    vista = VistaNotas(root)
+    controlador = ControladorNotas(modelo, vista)
+    root.mainloop()
+
 
 if __name__ == "__main__":
-    modelo = NotasModel()
-    vista = VistaNotas()  # Creamos la vista sin pasar el controlador
-    controlador = ControladorNotas(modelo, vista)
-    vista.set_controlador(controlador)  # Ahora configuramos el controlador en la vista
+    main()

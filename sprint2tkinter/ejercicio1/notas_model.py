@@ -14,11 +14,11 @@ class NotasModel:
     def guardar_notas(self):
         with open("notas.txt", "w") as archivo:
             for nota in self.notas:
-                archivo.write(nota + "\n")
+                archivo.write(nota + '\n')
 
     def cargar_notas(self):
-        try:
-            with open("notas.txt", "r") as archivo:
-                self.notas = [linea.strip() for linea in archivo.readlines()]
-        except FileNotFoundError:
-            self.notas = []
+        self.notas = []
+        with open('notas.txt', 'r') as archivo:
+            lineas = archivo.readlines()
+        for linea in lineas:
+            self.notas.append(linea.strip())
