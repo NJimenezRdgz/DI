@@ -4,6 +4,7 @@ from tkinter import simpledialog, Toplevel
 
 class GameView:
     def __init__(self, root, on_card_click_callback, update_move_count_callback, update_time_callback):
+        self.model = None
         self.root = root
         self.on_card_click_callback = on_card_click_callback
         self.update_move_count_callback = update_move_count_callback
@@ -14,6 +15,8 @@ class GameView:
         self.card_buttons = {}
         self.moves_label = None
         self.time_label = None
+        self.moves=0
+        self.time=0
 
     def create_board(self, model):
         self.board_frame = tk.Toplevel(self.root)
@@ -38,13 +41,14 @@ class GameView:
         self.time_label = tk.Label(self.board_frame, text="Tiempo: 00:00")
         self.time_label.grid(row=j+2)
 
-        # Inicializa el contador de movimientos y el tiempo
+
         self.update_move_count_callback(self.model.moves)
         self.update_time_callback(self.model.get_time())
 
     def card_click(self, row, col):
-        if self.cards.get((row, col)) is None:  # Solo permite clic en cartas ocultas
+        if self.cards.get((row, col)) is None:
             self.reveal_card(row, col)
+            self.update_move_count(1)
             self.on_card_click_callback((row, col))
 
     def reveal_card(self, row, col):
@@ -73,7 +77,8 @@ class GameView:
 
     def update_move_count(self, moves):
         if self.moves_label:
-            self.moves_label.config(text=f"Movimientos: {moves}")
+            self.moves+=moves
+            self.moves_label.config(text=f"Movimientos: {int(self.moves/2)}")
 
     def update_time(self, time):
         if self.time_label:

@@ -42,7 +42,6 @@ class GameModel:
             'Flower_Pot.png',
             'Glass_Joker.png',
             'Hanging_Chad.png',
-            'hidden.png',
             'Invisible_Joker.png',
             'Ironclad.png',
             'Isaac.png',
@@ -62,7 +61,8 @@ class GameModel:
             'Trading_Card.png',
             'Triboulet.png',
             'Wee_Joker.png',
-            'Yorick.png'
+            'Yorick.png',
+            'hidden.png'
         ]
 
         if self.name != "no":
@@ -73,6 +73,7 @@ class GameModel:
     def _generate_board(self):
         num_cards = int((self.difficulty * self.difficulty) // 2)
         self.pairs = num_cards
+        random.shuffle(self.img_names)
         self.cards = self.img_names[:num_cards] * 2
         random.shuffle(self.cards)
         self.board = [[None for _ in range(self.difficulty)] for _ in range(self.difficulty)]
@@ -87,8 +88,8 @@ class GameModel:
         def load_images_thread():
             url_base = "https://raw.githubusercontent.com/NJimenezRdgz/DI/refs/heads/main/sprint4tkinter/res/"
 
-            # Asegurarse de pasar el tamaño como tupla (cell_size, cell_size)
-            self.hidden_image = descargar_imagen(url_base + "hidden.png", (self.cell_size, self.cell_size))
+
+            self.hidden_image = descargar_imagen(url_base + "hid/hidden.png", (self.cell_size, self.cell_size))
 
             unique_image_ids = []
             for i in range(self.difficulty):
@@ -98,7 +99,8 @@ class GameModel:
 
             for image_name in unique_image_ids:
                 url = url_base + image_name
-                photo_image = descargar_imagen(url, (self.cell_size, self.cell_size))
+                if url != "https://raw.githubusercontent.com/NJimenezRdgz/DI/refs/heads/main/sprint4tkinter/res/hidden.png":
+                    photo_image = descargar_imagen(url, (self.cell_size, self.cell_size))
 
                 self.images[image_name] = photo_image
 
@@ -111,13 +113,9 @@ class GameModel:
         return self.images_loaded
 
     def start_timer(self):
-        self.timer_start_time = time.time()  # Marca el inicio del temporizador
-        self.timer_elapsed = 0
-        self.running = True
-        threading.Thread(target=self._update_timer, daemon=True).start()
+        pass
 
     def get_time(self):
-        """Devuelve el tiempo transcurrido desde el inicio del juego en segundos."""
         return int(self.timer_elapsed)
 
     def check_match(self,pos1,pos2):

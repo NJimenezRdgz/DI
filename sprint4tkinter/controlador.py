@@ -1,5 +1,4 @@
 import tkinter as tk
-from shutil import posix
 from tkinter import messagebox, simpledialog, Toplevel, Label, Tk
 from modelo import GameModel
 from vista import MainMenu, GameView
@@ -63,7 +62,7 @@ class GameController:
     def on_card_click(self,position):
         print(f"Click en: ({position})")
     def handle_card_selection(self):
-        pass
+
     def update_move_count(self,moves):
         pass
     def check_game_complete(self):
@@ -73,5 +72,6 @@ class GameController:
     def show_stats(self):
         stats_window = Toplevel(self.root)
         tk.Label(stats_window,text = "Stats: 0").pack(padx=10,pady=10)
-    def update_time(self):
+    def update_time(self,time):
+        print(time)
         pass
