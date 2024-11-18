@@ -3,6 +3,7 @@ import time
 import random
 import datetime
 from sprint4tkinter.recursos import descargar_imagen
+import tkinter as tk
 
 
 class GameModel:
@@ -25,6 +26,9 @@ class GameModel:
         self.images = {}
         self.pairs = 0
         self.pairs_found = 0
+        self.timer_start_time = 0
+        self.start_time = time.time()
+        self.timer_elapsed=0
         self.img_names = [
             'Bloodstone.png',
             'Blueprint.png',
@@ -71,8 +75,6 @@ class GameModel:
         self.pairs = num_cards
         self.cards = self.img_names[:num_cards] * 2
         random.shuffle(self.cards)
-        print(self.cards)
-        print("-" * 15)
         self.board = [[None for _ in range(self.difficulty)] for _ in range(self.difficulty)]
         index = 0
         for i in range(self.difficulty):
@@ -85,7 +87,8 @@ class GameModel:
         def load_images_thread():
             url_base = "https://raw.githubusercontent.com/NJimenezRdgz/DI/refs/heads/main/sprint4tkinter/res/"
 
-            self.hidden_image = descargar_imagen(url_base + "hidden.png", self.cell_size)
+            # Asegurarse de pasar el tamaño como tupla (cell_size, cell_size)
+            self.hidden_image = descargar_imagen(url_base + "hidden.png", (self.cell_size, self.cell_size))
 
             unique_image_ids = []
             for i in range(self.difficulty):
@@ -95,7 +98,7 @@ class GameModel:
 
             for image_name in unique_image_ids:
                 url = url_base + image_name
-                photo_image = descargar_imagen(url, self.cell_size)
+                photo_image = descargar_imagen(url, (self.cell_size, self.cell_size))
 
                 self.images[image_name] = photo_image
 
@@ -106,18 +109,25 @@ class GameModel:
 
     def images_are_loaded(self):
         return self.images_loaded
+
     def start_timer(self):
         self.timer_start_time = time.time()  # Marca el inicio del temporizador
         self.timer_elapsed = 0
+        self.running = True
+        threading.Thread(target=self._update_timer, daemon=True).start()
+
     def get_time(self):
-        if self.timer_start_time is not None:
-            self.timer_elapsed = time.time() - self.timer_start_time
-        return datetime.timedelta(seconds=int(self.timer_elapsed))
+        """Devuelve el tiempo transcurrido desde el inicio del juego en segundos."""
+        return int(self.timer_elapsed)
+
     def check_match(self,pos1,pos2):
         pass
+
     def is_game_complete(self):
         pass
+
     def save_score(self):
         pass
+
     def load_scores(self):
         pass

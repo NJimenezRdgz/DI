@@ -1,41 +1,108 @@
 import tkinter as tk
-from tkinter import simpledialog
-from tkinter import Toplevel
+from tkinter import simpledialog, Toplevel
+
 
 class GameView:
-    def __init__(self,root, on_card_click_callbackk,update_move_count_callback,update_time_callback,):
-        self.window = None
+    def __init__(self, root, on_card_click_callback, update_move_count_callback, update_time_callback):
         self.root = root
-        self.labels = {}
-        self.on_card_click_callback = on_card_click_callbackk
+        self.on_card_click_callback = on_card_click_callback
         self.update_move_count_callback = update_move_count_callback
         self.update_time_callback = update_time_callback
 
-    def create_board(self,model):
-        pass
-    def update_board(self,pos,image_id):
-        pass
-    def reset_cards(self,pos1,pos2):
-        pass
-    def update_move_count(self,moves):
-        pass
-    def update_time(self,time):
-        pass
+        self.board_frame = None
+        self.cards = {}
+        self.card_buttons = {}
+        self.moves_label = None
+        self.time_label = None
+
+    def create_board(self, model):
+        self.board_frame = tk.Toplevel(self.root)
+
+        self.model = model
+
+        for i in range(self.model.difficulty):
+            for j in range(self.model.difficulty):
+                card_image = self.model.hidden_image
+                button = tk.Button(
+                    self.board_frame,
+                    image=card_image,
+                    command=lambda row=i, col=j: self.card_click(row, col)
+                )
+                button.grid(row=i, column=j, padx=5, pady=5)
+                self.card_buttons[(i, j)] = button
+                self.cards[(i, j)] = None
+
+        self.moves_label = tk.Label(self.board_frame, text="Movimientos: 0")
+        self.moves_label.grid(row=j+1)
+
+        self.time_label = tk.Label(self.board_frame, text="Tiempo: 00:00")
+        self.time_label.grid(row=j+2)
+
+        # Inicializa el contador de movimientos y el tiempo
+        self.update_move_count_callback(self.model.moves)
+        self.update_time_callback(self.model.get_time())
+
+    def card_click(self, row, col):
+        if self.cards.get((row, col)) is None:  # Solo permite clic en cartas ocultas
+            self.reveal_card(row, col)
+            self.on_card_click_callback((row, col))
+
+    def reveal_card(self, row, col):
+        card_image = self.model.images.get(self.model.board[row][col], self.model.hidden_image)
+        self.cards[(row, col)] = card_image
+        self.card_buttons[(row, col)].config(image=card_image)
+
+    def update_board(self, pos, image_id):
+        row, col = pos
+        image = self.model.images.get(image_id, self.model.hidden_image)
+        self.cards[(row, col)] = image
+        self.card_buttons[(row, col)].config(image=image)
+
+    def reset_cards(self, pos1, pos2):
+        row1, col1 = pos1
+        row2, col2 = pos2
+
+        self.root.after(500, lambda: self._hide_cards(row1, col1, row2, col2))
+
+    def _hide_cards(self, row1, col1, row2, col2):
+        self.cards[(row1, col1)] = None
+        self.cards[(row2, col2)] = None
+
+        self.card_buttons[(row1, col1)].config(image=self.model.hidden_image)
+        self.card_buttons[(row2, col2)].config(image=self.model.hidden_image)
+
+    def update_move_count(self, moves):
+        if self.moves_label:
+            self.moves_label.config(text=f"Movimientos: {moves}")
+
+    def update_time(self, time):
+        if self.time_label:
+            self.time_label.config(text=f"Tiempo: {str(time)}")
+
     def destroy(self):
-        pass
+        if self.board_frame:
+            self.board_frame.destroy()
+        if self.moves_label:
+            self.moves_label.destroy()
+        if self.time_label:
+            self.time_label.destroy()
+
 
 class MainMenu:
     def __init__(self, root, start_game_callback, show_stats_callback, quit_callback):
-        self.window=root
+        self.window = root
         self.window.title("Juego memoria")
-        self.player_name=None
-        (tk.Button(self.window,text="Jugar",command=start_game_callback).pack(pady=10))
-        (tk.Button(self.window,text="Estadísticas",command=show_stats_callback).pack(pady=10))
-        (tk.Button(self.window,text="Salir",command=quit_callback).pack(pady=10))
-
+        self.player_name = None
+        tk.Button(self.window, text="Jugar", command=start_game_callback).pack(pady=10)
+        tk.Button(self.window, text="Estadísticas", command=show_stats_callback).pack(pady=10)
+        tk.Button(self.window, text="Salir", command=quit_callback).pack(pady=10)
 
     def ask_player_name(self):
-        player_name = simpledialog.askstring(title="Nombre del jugador",prompt="Por favor, introduce tu nombre:",parent=self.window)
+        player_name = simpledialog.askstring(
+            title="Nombre del jugador",
+            prompt="Por favor, introduce tu nombre:",
+            parent=self.window
+        )
         if player_name:
             print(player_name)
             self.player_name = player_name
@@ -43,5 +110,5 @@ class MainMenu:
             print("No se introdujo ningún nombre.")
             return None
 
-    def show_stats(self,stats):
+    def show_stats(self, stats):
         pass
