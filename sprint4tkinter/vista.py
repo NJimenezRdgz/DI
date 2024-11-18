@@ -3,8 +3,9 @@ from tkinter import simpledialog
 from tkinter import Toplevel
 
 class GameView:
-    def __init__(self, on_card_click_callbackk,update_move_count_callback,update_time_callback):
+    def __init__(self,root, on_card_click_callbackk,update_move_count_callback,update_time_callback,):
         self.window = None
+        self.root = root
         self.labels = {}
         self.on_card_click_callback = on_card_click_callbackk
         self.update_move_count_callback = update_move_count_callback

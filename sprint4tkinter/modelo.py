@@ -7,64 +7,112 @@ from sprint4tkinter.recursos import descargar_imagen
 
 class GameModel:
     def __init__(self, difficulty, player_name, cell_size=100):
-        self.difficulty = difficulty
-        self.player_name = player_name
-        self.cell_size = cell_size
-        self.board = self._generate_board()
-        self.images = {}
+        if difficulty == "fácil" or difficulty == "facil":
+            self.difficulty = 4
+        elif difficulty == "normal":
+            self.difficulty = 6
+        else:
+            self.difficulty = 8
+
+        self.name = player_name
+        self.moves = 0
+        self.start_time = None
         self.images_loaded = False
-        self.images_loaded_event = threading.Event()
+        self.cell_size = cell_size
+        self.board = None
+        self.cards = None
+        self.hidden_image = None
+        self.images = {}
+        self.pairs = 0
+        self.pairs_found = 0
+        self.img_names = [
+            'Bloodstone.png',
+            'Blueprint.png',
+            'Brainstorm.png',
+            'Burnt_Joker.png',
+            'Canio.png',
+            'Cavendish.png',
+            'Chicot.png',
+            'Defect.png',
+            'Driver27s_License.png',
+            'Flower_Pot.png',
+            'Glass_Joker.png',
+            'Hanging_Chad.png',
+            'hidden.png',
+            'Invisible_Joker.png',
+            'Ironclad.png',
+            'Isaac.png',
+            'Lucky_Cat.png',
+            'Oops21_All_6s.png',
+            'Perkeo.png',
+            'Photograph.png',
+            'Shoot_the_Moon.png',
+            'Showman.png',
+            'Silent.png',
+            'Smeared_Joker.png',
+            'Sock_and_Buskin.png',
+            'Spare_Trousers.png',
+            'Stuntman.png',
+            'The_Family.png',
+            'The_Idol.png',
+            'Trading_Card.png',
+            'Triboulet.png',
+            'Wee_Joker.png',
+            'Yorick.png'
+        ]
+
+        if self.name != "no":
+            self._generate_board()
+            self._load_images()
 
 
     def _generate_board(self):
-            if self.difficulty=="fácil":
-                columna=4
-                fila = 4
-            elif self.difficulty == "medio":
-                columna = 6
-                fila = 6
-            elif self.difficulty == "difícil":
-                columna = 8
-                fila = 8
-
-            total_cartas = fila*columna
-
-            parejas = list(range(total_cartas//2))*2
-
-            random.shuffle(parejas)
-            return [parejas[i:i + columna] for i in range(0, total_cartas, columna)]
+        num_cards = int((self.difficulty * self.difficulty) // 2)
+        self.pairs = num_cards
+        self.cards = self.img_names[:num_cards] * 2
+        random.shuffle(self.cards)
+        print(self.cards)
+        print("-" * 15)
+        self.board = [[None for _ in range(self.difficulty)] for _ in range(self.difficulty)]
+        index = 0
+        for i in range(self.difficulty):
+            for j in range(self.difficulty):
+                self.board[i][j] = self.cards[index]
+                print(self.cards[index])
+                index += 1
 
     def _load_images(self):
         def load_images_thread():
-            try:
-                url_base = "https://github.com/NJimenezRdgz/DI/tree/main/sprint4tkinter/res"
-                self.hidden_image = descargar_imagen(f"{url_base}hidden.png", (100, 100))
-                if self.hidden_image is None:
-                    raise Exception("Error al cargar la imagen oculta.")
-                unique_image_ids = []
-                for row in self.board:
-                    for image_id in row:
-                        if image_id not in unique_image_ids:
-                            unique_image_ids.append(image_id)
-                for image_id in unique_image_ids:
-                    image_url = f"{url_base}carta_{image_id}.png"
-                    self.images[image_id] = descargar_imagen(image_url, (100, 100))
-                    if self.images[image_id] is None:
-                        raise Exception(f"Error al cargar la imagen de la carta {image_id}.")
-                self.images_loaded = True
-                self.images_loaded_event.set()
-            except Exception as e:
-                print(f"Error en load_images_thread: {e}")
-                self.images_loaded_event.set()
+            url_base = "https://raw.githubusercontent.com/NJimenezRdgz/DI/refs/heads/main/sprint4tkinter/res/"
+
+            self.hidden_image = descargar_imagen(url_base + "hidden.png", self.cell_size)
+
+            unique_image_ids = []
+            for i in range(self.difficulty):
+                for j in range(self.difficulty):
+                    if self.board[i][j] not in unique_image_ids:
+                        unique_image_ids.append(self.board[i][j])
+
+            for image_name in unique_image_ids:
+                url = url_base + image_name
+                photo_image = descargar_imagen(url, self.cell_size)
+
+                self.images[image_name] = photo_image
+
+            self.images_loaded = True
 
         threading.Thread(target=load_images_thread, daemon=True).start()
+
 
     def images_are_loaded(self):
         return self.images_loaded
     def start_timer(self):
-        pass
+        self.timer_start_time = time.time()  # Marca el inicio del temporizador
+        self.timer_elapsed = 0
     def get_time(self):
-        pass
+        if self.timer_start_time is not None:
+            self.timer_elapsed = time.time() - self.timer_start_time
+        return datetime.timedelta(seconds=int(self.timer_elapsed))
     def check_match(self,pos1,pos2):
         pass
     def is_game_complete(self):

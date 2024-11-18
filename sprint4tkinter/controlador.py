@@ -20,14 +20,41 @@ class GameController:
                 return show_difficulty_button
             else:
                 messagebox.showerror(title="Entrada no válida",message="Por favor, introduce una opción válida: fácil, medio o difícil.")
-    def start_game(self,difficulty):
+
+    def start_game(self, difficulty):
         game_start_window = Toplevel(self.root)
-        tk.Label(game_start_window,text = "Dificultad: "+difficulty).pack(padx=10,pady=10)
+        tk.Label(game_start_window, text=f"Dificultad: {difficulty}").pack(padx=10, pady=10)
+
         self.main_menu.ask_player_name()
-    def show_loading_window(self,message):
-        pass
+        player_name = self.main_menu.player_name
+
+        if player_name:
+            self.model = GameModel(difficulty, player_name)
+            self.show_loading_window("Cargando imágenes...")
+            self.model._load_images()
+            self.check_images_loaded()
+        else:
+            messagebox.showerror("Error", "El nombre del jugador es obligatorio para empezar el juego.")
+
+    def show_loading_window(self, message):
+        self.loading_window = Toplevel(self.root)
+        self.loading_window.title("Cargando...")
+        label = Label(self.loading_window, text=message)
+        label.pack(padx=10, pady=10)
+
+    def show_game_view(self):
+        game_view = GameView(self.model, self.on_card_click, self.update_move_count, self.update_time)
+        game_view.create_board(self.model)
     def check_images_loaded(self):
-        pass
+        def check():
+            if self.model.images_are_loaded():
+                self.loading_window.destroy()
+                self.show_game_view()
+            else:
+                self.root.after(100, check)
+
+        check()
+
     def on_card_click(self):
         pass
     def handle_card_selection(self):
