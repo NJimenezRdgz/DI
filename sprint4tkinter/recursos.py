@@ -1,18 +1,19 @@
 import requests
-import PIL
+from PIL import Image, ImageTk
 import io
-
-from PIL import Image
 from requests import RequestException
 
-
 def descargar_imagen(url, size):
-    response =requests.get(url)
     try:
+        response = requests.get(url)
         response.raise_for_status()
+        image = Image.open(io.BytesIO(response.content))
 
+        image = image.resize(size, Image.ANTIALIAS)
 
+        return ImageTk.PhotoImage(image)
     except RequestException:
-        print("Error, url no válida: "+url)
-        return None
-
+        print(f"Error: URL no válida -> {url}")
+    except Exception as e:
+        print(f"Error al procesar la imagen: {e}")
+    return None

@@ -7,9 +7,8 @@ from sprint4tkinter.vista import GameView
 
 def main():
     root = tk.Tk()
-    #model = GameModel("easy","Name")
+    model = GameModel("fácil","Jugador")
     controller = GameController(root)
-    #vista = MainMenu(root,None,None,None)
     root.mainloop()
 
 
