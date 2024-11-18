@@ -12,7 +12,7 @@ class GameModel:
         self.cell_size = cell_size
         self.board = self._generate_board()
         self.images = {}
-        self.images_loaded = False 
+        self.images_loaded = False
         self.images_loaded_event = threading.Event()
 
 
@@ -37,7 +37,7 @@ class GameModel:
     def _load_images(self):
         def load_images_thread():
             try:
-                url_base = "https://github.com/ruta/repo_imagenes/"
+                url_base = "https://github.com/NJimenezRdgz/DI/tree/main/sprint4tkinter/res"
                 self.hidden_image = descargar_imagen(f"{url_base}hidden.png", (100, 100))
                 if self.hidden_image is None:
                     raise Exception("Error al cargar la imagen oculta.")
