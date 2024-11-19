@@ -10,9 +10,9 @@ class GameModel:
     def __init__(self, difficulty, player_name, cell_size=100):
         if difficulty == "fácil" or difficulty == "facil":
             self.difficulty = 4
-        elif difficulty == "normal":
+        elif difficulty == "medio":
             self.difficulty = 6
-        else:
+        elif difficulty =="difícil":
             self.difficulty = 8
 
         self.name = player_name
@@ -113,10 +113,11 @@ class GameModel:
         return self.images_loaded
 
     def start_timer(self):
-        pass
-
+        self.start_time = time.time()
     def get_time(self):
-        return int(self.timer_elapsed)
+        if self.start_time is None:
+            return 0
+        return int(time.time() - self.start_time)
 
     def check_match(self,pos1,pos2):
         pass

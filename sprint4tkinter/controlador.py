@@ -62,7 +62,7 @@ class GameController:
     def on_card_click(self,position):
         print(f"Click en: ({position})")
     def handle_card_selection(self):
-
+        pass
     def update_move_count(self,moves):
         pass
     def check_game_complete(self):

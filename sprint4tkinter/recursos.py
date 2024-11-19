@@ -16,4 +16,4 @@ def descargar_imagen(url, size):
         print(f"Error: URL no válida -> {url}")
     except Exception as e:
         print(f"Error al procesar la imagen: {e}")
-    return None
+        return None

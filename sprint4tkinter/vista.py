@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import simpledialog, Toplevel
+from tkinter import simpledialog
 
 
 class GameView:
@@ -66,14 +66,8 @@ class GameView:
         row1, col1 = pos1
         row2, col2 = pos2
 
-        self.root.after(500, lambda: self._hide_cards(row1, col1, row2, col2))
-
-    def _hide_cards(self, row1, col1, row2, col2):
-        self.cards[(row1, col1)] = None
-        self.cards[(row2, col2)] = None
-
-        self.card_buttons[(row1, col1)].config(image=self.model.hidden_image)
-        self.card_buttons[(row2, col2)].config(image=self.model.hidden_image)
+        self.card_buttons[row1][col1].config(image=self.model.hidden_image)
+        self.card_buttons[row2][col2].config(image=self.model.hidden_image)
 
     def update_move_count(self, moves):
         if self.moves_label:
@@ -96,24 +90,18 @@ class GameView:
 class MainMenu:
     def __init__(self, root, start_game_callback, show_stats_callback, quit_callback):
         self.window = root
-        self.window.title("Juego memoria")
+        self.window.title("Juego de memoria")
         self.player_name = None
         tk.Button(self.window, text="Jugar", command=start_game_callback).pack(pady=10)
         tk.Button(self.window, text="Estadísticas", command=show_stats_callback).pack(pady=10)
         tk.Button(self.window, text="Salir", command=quit_callback).pack(pady=10)
 
     def ask_player_name(self):
-        player_name = simpledialog.askstring(
-            title="Nombre del jugador",
-            prompt="Por favor, introduce tu nombre:",
-            parent=self.window
-        )
-        if player_name:
-            print(player_name)
-            self.player_name = player_name
-        else:
+        try:
+            self.player_name = simpledialog.askstring(title="Nombre del jugador",prompt="Por favor, introduce tu nombre:",parent=self.window)
+            print(self.player_name)
+        except:
             print("No se introdujo ningún nombre.")
             return None
-
     def show_stats(self, stats):
         pass
