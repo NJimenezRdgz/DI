@@ -7,7 +7,7 @@ import tkinter as tk
 
 
 class GameModel:
-    def __init__(self, difficulty, player_name, cell_size=100):
+    def __init__(self, difficulty, player_name, cell_size=70):
         if difficulty == "fácil" or difficulty == "facil":
             self.difficulty = 4
         elif difficulty == "medio":
