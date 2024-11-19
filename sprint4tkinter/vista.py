@@ -3,8 +3,8 @@ from tkinter import simpledialog
 
 
 class GameView:
-    def __init__(self, root, on_card_click_callback, update_move_count_callback, update_time_callback):
-        self.model = None
+    def __init__(self, root, on_card_click_callback, update_move_count_callback, update_time_callback,model):
+        self.model = model
         self.root = root
         self.on_card_click_callback = on_card_click_callback
         self.update_move_count_callback = update_move_count_callback

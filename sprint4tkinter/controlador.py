@@ -47,7 +47,7 @@ class GameController:
         label.pack(padx=10, pady=10)
 
     def show_game_view(self):
-        self.game_view = GameView(self.root,self.on_card_click,self.update_move_count,self.update_time)
+        self.game_view = GameView(self.root,self.on_card_click,self.update_move_count,self.update_time,self.model)
         self.game_view.create_board(self.model)
     def check_images_loaded(self):
         def check():
