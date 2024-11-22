@@ -1,0 +1,50 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/detail_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="El Archivo de las Tormentas"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/detail_imagen_circular"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_margin="16dp"
+        android:src="@drawable/placeholder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_titulo" />
+
+    <TextView
+        android:id="@+id/detail_descripcion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="El camino de los reyes es el primer volumen de «El Archivo de las Tormentas», el resultado de más de una década de construcción y escritura de universos..."
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_imagen_circular"
+        app:layout_constraintTop_toTopOf="@id/detail_titulo"
+        app:layout_constraintBottom_toTopOf="@id/detail_like_button" />
+
+
+    <Button
+        android:id="@+id/detail_like_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Me Gusta"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_imagen_circular"
+        app:layout_constraintTop_toBottomOf="@id/detail_descripcion" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
