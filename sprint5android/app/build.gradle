@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
     implementation libs.circleimageview
     implementation libs.glide
     annotationProcessor libs.compiler
